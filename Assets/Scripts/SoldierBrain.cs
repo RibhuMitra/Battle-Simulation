@@ -14,6 +14,9 @@ public class SoldierBrain : MonoBehaviour
     public float distanceWeight = 0.7f;
     public float healthWeight = 0.3f;
 
+    [Header("Debugging")]
+    public bool enableBrainLogging = true;
+
     [Header("Components")]
     public Health health;
     public Combat combat;
@@ -144,6 +147,12 @@ public class SoldierBrain : MonoBehaviour
         runDirection.y = 0f; // Keep movement in horizontal plane
 
         Vector3 retreatDestination = transform.position + runDirection * retreatDistanceMultiplier;
+
+        if (enableBrainLogging)
+        {
+            Debug.Log($"{gameObject.name} (Retreating) | Current Pos: {transform.position} | Target Pos: {retreatDestination}");
+        }
+
         if (soldierAI != null)
         {
             // Increase speed for tactical sprint fleeing
