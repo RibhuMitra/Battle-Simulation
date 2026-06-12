@@ -174,7 +174,7 @@ public class SoldierBrain : MonoBehaviour
             if (enemyTransform == null) continue;
 
             float distance = Vector3.Distance(transform.position, enemyTransform.position);
-            Health enemyHealth = enemyTransform.GetComponent<Health>();
+            Health enemyHealth = enemyTransform.GetComponentInParent<Health>();
             float enemyHealthPercent = enemyHealth != null ? enemyHealth.HealthPercentage : 1f;
 
             // Target Scoring Formula:

@@ -36,7 +36,7 @@ public class Combat : MonoBehaviour
         attackTimer = 0f;
 
         Health health =
-            enemy.GetComponent<Health>();
+            enemy.GetComponentInParent<Health>();
 
         if (health != null)
         {

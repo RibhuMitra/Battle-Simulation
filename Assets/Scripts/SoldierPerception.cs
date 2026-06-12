@@ -54,7 +54,7 @@ public class SoldierPerception : MonoBehaviour
                 continue;
 
             Team otherTeam =
-                unit.GetComponent<Team>();
+                unit.GetComponentInParent<Team>();
 
             if (otherTeam == null)
                 continue;
