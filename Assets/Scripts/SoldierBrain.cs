@@ -57,7 +57,23 @@ public class SoldierBrain : MonoBehaviour
         // 1. Check for retreat conditions
         bool isOutnumbered = perception != null && perception.nearbyEnemies > (perception.nearbyAllies + 1);
         float currentRetreatThreshold = isOutnumbered ? outnumberedRetreatThreshold : baseRetreatThreshold;
-        bool shouldRetreat = health != null && (health.HealthPercentage < currentRetreatThreshold) && (perception != null && perception.nearbyEnemies > 0);
+        bool isLowHealth = health != null && (health.HealthPercentage < currentRetreatThreshold);
+
+        bool shouldRetreat = false;
+        if (isLowHealth)
+        {
+            if (currentState == SoldierState.Retreat)
+            {
+                // Flee as long as we see enemies OR still remember them (prevents border stutter)
+                bool hasEnemiesOrMemory = (perception != null && perception.nearbyEnemies > 0) || (memory != null && memory.HasMemory);
+                shouldRetreat = hasEnemiesOrMemory;
+            }
+            else
+            {
+                // Only initiate retreat if we actively see an enemy
+                shouldRetreat = (perception != null && perception.nearbyEnemies > 0);
+            }
+        }
 
         if (shouldRetreat)
         {
@@ -146,10 +162,14 @@ public class SoldierBrain : MonoBehaviour
 
         Vector3 runDirection = Vector3.zero;
 
-        // Flee from nearest enemy
+        // Flee from nearest enemy or last known enemy position from memory
         if (perception != null && perception.nearestEnemy != null)
         {
             runDirection = (transform.position - perception.nearestEnemy.position).normalized;
+        }
+        else if (memory != null && memory.HasMemory)
+        {
+            runDirection = (transform.position - memory.LastKnownEnemyPosition).normalized;
         }
         else
         {
