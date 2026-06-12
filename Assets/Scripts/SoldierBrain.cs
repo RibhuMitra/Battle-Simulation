@@ -9,6 +9,7 @@ public class SoldierBrain : MonoBehaviour
     public float baseRetreatThreshold = 0.2f; // 20% health
     public float outnumberedRetreatThreshold = 0.4f; // 40% health
     public float retreatDistanceMultiplier = 5f;
+    public float retreatSpeedMultiplier = 2f;
 
     [Header("Threat Assessment Weights")]
     public float distanceWeight = 0.7f;
@@ -77,11 +78,13 @@ public class SoldierBrain : MonoBehaviour
         Transform targetEnemy = ChooseBestTarget();
         Vector3 targetPosition = Vector3.zero;
         bool hasTarget = false;
+        bool isTargetVisible = false;
 
         if (targetEnemy != null)
         {
             targetPosition = targetEnemy.position;
             hasTarget = true;
+            isTargetVisible = true;
             if (memory != null)
             {
                 memory.UpdateMemory(targetEnemy, targetPosition);
@@ -92,6 +95,7 @@ public class SoldierBrain : MonoBehaviour
             targetEnemy = memory.LastSeenEnemy;
             targetPosition = memory.LastKnownEnemyPosition;
             hasTarget = true;
+            isTargetVisible = false;
         }
 
         // 3. Apply state and execute actions
@@ -100,7 +104,7 @@ public class SoldierBrain : MonoBehaviour
             float distance = Vector3.Distance(transform.position, targetPosition);
             float range = combat != null ? combat.attackRange : 2f;
 
-            if (distance <= range)
+            if (isTargetVisible && distance <= range)
             {
                 currentState = SoldierState.Attack;
                 if (combat != null) combat.enemy = targetEnemy;
@@ -108,7 +112,7 @@ public class SoldierBrain : MonoBehaviour
 
                 if (enableBrainLogging)
                 {
-                    Debug.Log($"{gameObject.name} (Attacking) | Current Pos: {transform.position} | Target: {(targetEnemy != null ? targetEnemy.name : "None")}");
+                    Debug.Log($"{gameObject.name} (Attacking) | Current Pos: {transform.position} | Target: {(targetEnemy != null ? targetEnemy.name : "None")} | Distance: {distance:F2}");
                 }
             }
             else
@@ -119,7 +123,7 @@ public class SoldierBrain : MonoBehaviour
 
                 if (enableBrainLogging)
                 {
-                    Debug.Log($"{gameObject.name} (Moving) | Current Pos: {transform.position} | Target Pos: {targetPosition}");
+                    Debug.Log($"{gameObject.name} (Moving) | Current Pos: {transform.position} | Target Pos: {targetPosition} | Distance: {distance:F2}");
                 }
             }
         }
@@ -165,13 +169,16 @@ public class SoldierBrain : MonoBehaviour
 
         if (enableBrainLogging)
         {
-            Debug.Log($"{gameObject.name} (Retreating) | Current Pos: {transform.position} | Target Pos: {retreatDestination}");
+            float enemyDist = (perception != null && perception.nearestEnemy != null) 
+                ? Vector3.Distance(transform.position, perception.nearestEnemy.position) 
+                : 0f;
+            Debug.Log($"{gameObject.name} (Retreating) | Current Pos: {transform.position} | Target Pos: {retreatDestination} | Distance to Enemy: {enemyDist:F2}");
         }
 
         if (soldierAI != null)
         {
-            // Increase speed for tactical sprint fleeing
-            soldierAI.moveSpeed = originalMoveSpeed * 1.5f;
+            // Increase speed for tactical sprint fleeing using retreatSpeedMultiplier
+            soldierAI.moveSpeed = originalMoveSpeed * retreatSpeedMultiplier;
             soldierAI.MoveTo(retreatDestination);
         }
     }
