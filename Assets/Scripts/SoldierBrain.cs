@@ -105,12 +105,22 @@ public class SoldierBrain : MonoBehaviour
                 currentState = SoldierState.Attack;
                 if (combat != null) combat.enemy = targetEnemy;
                 if (soldierAI != null) soldierAI.Stop();
+
+                if (enableBrainLogging)
+                {
+                    Debug.Log($"{gameObject.name} (Attacking) | Current Pos: {transform.position} | Target: {(targetEnemy != null ? targetEnemy.name : "None")}");
+                }
             }
             else
             {
                 currentState = SoldierState.Move;
                 if (combat != null) combat.enemy = null;
                 if (soldierAI != null) soldierAI.MoveTo(targetPosition);
+
+                if (enableBrainLogging)
+                {
+                    Debug.Log($"{gameObject.name} (Moving) | Current Pos: {transform.position} | Target Pos: {targetPosition}");
+                }
             }
         }
         else
@@ -118,6 +128,11 @@ public class SoldierBrain : MonoBehaviour
             currentState = SoldierState.Search;
             if (combat != null) combat.enemy = null;
             if (soldierAI != null) soldierAI.Stop();
+
+            if (enableBrainLogging)
+            {
+                Debug.Log($"{gameObject.name} (Searching) | Current Pos: {transform.position}");
+            }
         }
     }
 
