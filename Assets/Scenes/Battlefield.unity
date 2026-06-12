@@ -398,6 +398,10 @@ GameObject:
   - component: {fileID: 599056247}
   - component: {fileID: 599056246}
   - component: {fileID: 599056251}
+  - component: {fileID: 599056253}
+  - component: {fileID: 599056252}
+  - component: {fileID: 599056255}
+  - component: {fileID: 599056254}
   m_Layer: 0
   m_Name: RomanSoldier
   m_TagString: Untagged
@@ -414,7 +418,7 @@ Transform:
   m_GameObject: {fileID: 599056244}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10, y: 1, z: 0}
+  m_LocalPosition: {x: -16.12, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -432,9 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c10b25062d7cdbf4b9aae5ff5924ee7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoldierAI
-  enemy: {fileID: 2007136817}
   moveSpeed: 3
-  attackRange: 2
 --- !u!114 &599056247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -447,7 +449,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61bf26c3ff015f74e80cedeac27ea7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
+  maxHealth: 90
+  enableCombatLogging: 1
 --- !u!136 &599056248
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -544,6 +547,123 @@ MonoBehaviour:
   damage: 10
   attackRange: 2
   attackCooldown: 1
+  enableCombatLogging: 1
+--- !u!114 &599056252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599056244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a609a2b8c6df647a44460808dbd68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierPerception
+  visionRadius: 10
+  nearestEnemy: {fileID: 0}
+  nearestAlly: {fileID: 0}
+  nearbyEnemies: 0
+  nearbyAllies: 0
+  visibleEnemies: []
+  visibleAllies: []
+--- !u!114 &599056253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599056244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5bec5aa9042ce41890d4f4328ba38c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Team
+  faction: 0
+--- !u!114 &599056254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599056244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 451120c2301b7964395bc86932e9865d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierBrain
+  currentState: 0
+  baseRetreatThreshold: 0.2
+  outnumberedRetreatThreshold: 0.4
+  retreatDistanceMultiplier: 5
+  retreatSpeedMultiplier: 2
+  distanceWeight: 0.7
+  healthWeight: 0.3
+  enableBrainLogging: 1
+  health: {fileID: 0}
+  combat: {fileID: 0}
+  soldierAI: {fileID: 0}
+  perception: {fileID: 0}
+  memory: {fileID: 0}
+  team: {fileID: 0}
+--- !u!114 &599056255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599056244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0cc5298fcf70c4185f727c7c284cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierMemory
+  memoryDuration: 5
+--- !u!1 &670187200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 670187202}
+  - component: {fileID: 670187201}
+  m_Layer: 0
+  m_Name: LogForwarder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &670187201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670187200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dcf9749ecc014447aa1e51fc2d4eb0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnityLogForwarder
+  serverUrl: http://localhost:5000/api/logs
+--- !u!4 &670187202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670187200}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -25.5062, y: 0, z: 18.13131}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,6 +841,10 @@ GameObject:
   - component: {fileID: 2007136813}
   - component: {fileID: 2007136812}
   - component: {fileID: 2007136818}
+  - component: {fileID: 2007136820}
+  - component: {fileID: 2007136819}
+  - component: {fileID: 2007136822}
+  - component: {fileID: 2007136821}
   m_Layer: 0
   m_Name: CarthageSoldier
   m_TagString: Untagged
@@ -740,9 +864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c10b25062d7cdbf4b9aae5ff5924ee7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoldierAI
-  enemy: {fileID: 599056245}
   moveSpeed: 3
-  attackRange: 2
 --- !u!114 &2007136813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -756,6 +878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+  enableCombatLogging: 1
 --- !u!136 &2007136814
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -845,7 +968,7 @@ Transform:
   m_GameObject: {fileID: 2007136811}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -867,6 +990,78 @@ MonoBehaviour:
   damage: 10
   attackRange: 2
   attackCooldown: 1
+  enableCombatLogging: 1
+--- !u!114 &2007136819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007136811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0a609a2b8c6df647a44460808dbd68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierPerception
+  visionRadius: 10
+  nearestEnemy: {fileID: 0}
+  nearestAlly: {fileID: 0}
+  nearbyEnemies: 0
+  nearbyAllies: 0
+  visibleEnemies: []
+  visibleAllies: []
+--- !u!114 &2007136820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007136811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5bec5aa9042ce41890d4f4328ba38c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Team
+  faction: 1
+--- !u!114 &2007136821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007136811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 451120c2301b7964395bc86932e9865d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierBrain
+  currentState: 0
+  baseRetreatThreshold: 0.2
+  outnumberedRetreatThreshold: 0.4
+  retreatDistanceMultiplier: 5
+  retreatSpeedMultiplier: 2
+  distanceWeight: 0.7
+  healthWeight: 0.3
+  enableBrainLogging: 1
+  health: {fileID: 0}
+  combat: {fileID: 0}
+  soldierAI: {fileID: 0}
+  perception: {fileID: 0}
+  memory: {fileID: 0}
+  team: {fileID: 0}
+--- !u!114 &2007136822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007136811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0cc5298fcf70c4185f727c7c284cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierMemory
+  memoryDuration: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -877,3 +1072,4 @@ SceneRoots:
   - {fileID: 1838046972}
   - {fileID: 599056245}
   - {fileID: 2007136817}
+  - {fileID: 670187202}

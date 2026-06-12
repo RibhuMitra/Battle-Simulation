@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Simulation Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">
+                <span class="pulse-icon" id="pulse-indicator"></span>
+                <h1>TACTICAL INFANTRY RADAR</h1>
+            </div>
+            <div class="server-status" id="connection-status">DISCONNECTED</div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-grid">
+            
+            <!-- LEFT PANEL: SOLDIER INDEX -->
+            <aside class="panel list-panel">
+                <h2 class="panel-title">Active Soldiers</h2>
+                <div class="soldier-list" id="soldier-list">
+                    <div class="empty-state">Waiting for Unity simulation logs...</div>
+                </div>
+            </aside>
+
+            <!-- CENTER PANEL: RADAR GRID -->
+            <main class="radar-container">
+                <canvas id="radar-canvas"></canvas>
+                <div class="radar-legend">
+                    <span class="legend-item"><span class="dot roman"></span> Roman</span>
+                    <span class="legend-item"><span class="dot carthage"></span> Carthage</span>
+                </div>
+            </main>
+
+            <!-- RIGHT PANEL: STATS -->
+            <aside class="panel stats-panel">
+                <h2 class="panel-title">Battlefield Metrics</h2>
+                
+                <div class="stat-card">
+                    <h3>Troop Strength</h3>
+                    <div class="strength-bar">
+                        <div class="strength-progress roman" id="strength-roman" style="width: 50%"></div>
+                        <div class="strength-progress carthage" id="strength-carthage" style="width: 50%"></div>
+                    </div>
+                    <div class="strength-counts">
+                        <span class="roman-text" id="count-roman">Romans: 0</span>
+                        <span class="carthage-text" id="count-carthage">Carthaginians: 0</span>
+                    </div>
+                </div>
+
+                <div class="stat-card chart-card">
+                    <h3>State Machine Distribution</h3>
+                    <canvas id="states-chart" width="200" height="200"></canvas>
+                </div>
+
+                <div class="stat-card events-card">
+                    <h3>Tactical Event Log</h3>
+                    <div class="event-feed" id="event-feed">
+                        <div class="feed-entry system">Radar initialized. Start Unity scene to stream.</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- FOOTER: RAW FEED -->
+        <footer class="raw-feed-container">
+            <div class="feed-header">Raw Log Stream</div>
+            <div class="raw-log-stream" id="raw-log-stream"></div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

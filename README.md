@@ -78,3 +78,25 @@ Press **Play** in Unity. The [SoldierBrain](file:///d:/unity_projects/Simulation
 
 ### Step 4: Adjust Debug Logs (Optional)
 If you want to reduce logging output in large battles, check or uncheck `enableCombatLogging` on the [Health](file:///d:/unity_projects/Simulation/Assets/Scripts/Health.cs#L3) and [Combat](file:///d:/unity_projects/Simulation/Assets/Scripts/Combat.cs#L3) scripts in the Inspector.
+
+---
+
+## 📊 Real-Time Web Dashboard
+
+You can visualize the battlefield in real time on a browser radar interface.
+
+### Running the Dashboard Local Server:
+1. Navigate to the `Dashboard` directory in your command line:
+   ```bash
+   cd Dashboard
+   ```
+2. Start the server:
+   ```bash
+   npm start
+   ```
+3. Open **`http://localhost:5000`** in your web browser.
+
+### Hooking up Unity Log Streaming:
+1. In the Unity Hierarchy, create an empty GameObject named `LogForwarder`.
+2. Attach the [UnityLogForwarder](file:///d:/unity_projects/Simulation/Assets/Scripts/UnityLogForwarder.cs) component to it.
+3. Press **Play** in Unity. The dashboard will connect and start drawing soldier positions, states, vector pathways, and live health meters!
