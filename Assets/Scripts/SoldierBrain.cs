@@ -22,11 +22,14 @@ public class SoldierBrain : MonoBehaviour
     public SoldierMemory memory;
     public Team team;
 
+    private float originalMoveSpeed = 3f;
+
     private void Start()
     {
         if (health == null) health = GetComponent<Health>();
         if (combat == null) combat = GetComponent<Combat>();
         if (soldierAI == null) soldierAI = GetComponent<SoldierAI>();
+        if (soldierAI != null) originalMoveSpeed = soldierAI.moveSpeed;
         if (perception == null) perception = GetComponent<SoldierPerception>();
         if (memory == null) memory = GetComponent<SoldierMemory>();
         if (team == null) team = GetComponent<Team>();
@@ -57,6 +60,14 @@ public class SoldierBrain : MonoBehaviour
             currentState = SoldierState.Retreat;
             ExecuteRetreat();
             return;
+        }
+        else
+        {
+            // Restore normal speed if we were in the Retreat state
+            if (currentState == SoldierState.Retreat && soldierAI != null)
+            {
+                soldierAI.moveSpeed = originalMoveSpeed;
+            }
         }
 
         // 2. Select target (Threat Assessment)
@@ -111,16 +122,32 @@ public class SoldierBrain : MonoBehaviour
     {
         if (combat != null) combat.enemy = null;
 
-        Vector3 nearestEnemyPos = (perception != null && perception.nearestEnemy != null) 
-            ? perception.nearestEnemy.position 
-            : transform.position - transform.forward;
+        Vector3 runDirection = Vector3.zero;
 
-        Vector3 runDirection = (transform.position - nearestEnemyPos).normalized;
+        // Flee from nearest enemy
+        if (perception != null && perception.nearestEnemy != null)
+        {
+            runDirection = (transform.position - perception.nearestEnemy.position).normalized;
+        }
+        else
+        {
+            runDirection = transform.forward;
+        }
+
+        // Bias retreat towards nearest ally for protection
+        if (perception != null && perception.nearestAlly != null)
+        {
+            Vector3 toAlly = (perception.nearestAlly.position - transform.position).normalized;
+            runDirection = (runDirection * 0.6f + toAlly * 0.4f).normalized;
+        }
+
         runDirection.y = 0f; // Keep movement in horizontal plane
 
         Vector3 retreatDestination = transform.position + runDirection * retreatDistanceMultiplier;
         if (soldierAI != null)
         {
+            // Increase speed for tactical sprint fleeing
+            soldierAI.moveSpeed = originalMoveSpeed * 1.5f;
             soldierAI.MoveTo(retreatDestination);
         }
     }
